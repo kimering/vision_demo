@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <style>
+      svg { width:500px; height:240px; border:1px, solid black }
+        .bar { fill:yellow; }
+        .barText { font-size:9pt; text-anchor:end; }
+    </style>
+  </head>
+  <body>
+    <% var got = result %>
+
+    <h1>Vision Demo</h1>
+    <svg id="myGraph"></svg>
+    <script type="text/javascript">
+      var data1 = <%-got%>
+      var data2 = data1.images[0].classifiers[0].classes
+
+      var dataValue = []
+      var dataScore = []
+
+      for(var item in data2){
+        dataValue.push(data2[item].class)
+        dataScore.push(data2[item].score)
+      }
+
+
+      var svgWidth = 320
+      var barElements
+
+      barElements = d3.select("#myGraph")
+        .selectAll("rect")
+        .data(dataScore)
+
+      barElements.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("height", 20)
+        .attr("width", function(d, i){
+          return d*320
+        })
+        .attr("x", 0)
+        .attr("y", function(d, i){
+          return i*25
+        })
+
+        barElements.enter()
+          .append("text")
+          .attr("y", function(d, i){
+            return i*25 + 10
+          })
+          .attr("x", 5)
+          .text(function(d, i) {
+            return d
+          })
+        barElements.enter()
+          .append("text")
+          .attr("x", 330)
+          .attr("y", function(d, i){
+            return i*25+15
+          })
+          .text(function(d, i){
+            return dataValue[i]
+          })
+
+    </script>
+  </body>
+</html>
